@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxury E-commerce Navbar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #faf9f7;
+            color: #1a1a1a;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        /* Announcement Bar */
+        .announcement-bar {
+            background-color: #1a1a1a;
+            color: #faf9f7;
+            text-align: center;
+            padding: 12px 0;
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Main Navbar */
+        .luxury-navbar {
+            background-color: #ffffff;
+            padding: 1.5rem 2rem;
+            position: relative;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        /* Logo */
+        .logo-container {
+            flex: 0 0 auto;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            color: #1a1a1a;
+            text-decoration: none;
+            position: relative;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background-color: #1a1a1a;
+            transform: scaleX(0);
+            transition: transform 0.4s cubic-bezier(0.215, 0.610, 0.355, 1);
+            transform-origin: right;
+        }
+
+        .logo:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        /* Navigation Links */
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: #1a1a1a;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background-color: #1a1a1a;
+            transform: scaleX(0);
+            transition: transform 0.4s cubic-bezier(0.215, 0.610, 0.355, 1);
+        }
+
+        .nav-link:hover {
+            color: #8b7355;
+        }
+
+        .nav-link:hover::after {
+            transform: scaleX(1);
+        }
+
+        .nav-item.has-megamenu .nav-link::before {
+            content: '›';
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%) rotate(90deg);
+            font-size: 1.2rem;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .nav-item.has-megamenu:hover .nav-link::before {
+            opacity: 0.5;
+            transform: translateY(-50%) rotate(0);
+        }
+
+        /* Actions */
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.8rem;
+        }
+
+        .action-icon {
+            position: relative;
+            color: #1a1a1a;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        .action-icon:hover {
+            color: #8b7355;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #8b7355;
+            color: white;
+            font-size: 0.65rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .wishlist-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #1a1a1a;
+            color: white;
+            font-size: 0.65rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        /* Search Bar */
+        .search-container {
+            position: relative;
+        }
+
+        .search-input {
+            border: none;
+            background: transparent;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 0.5rem 0;
+            width: 0;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.215, 0.610, 0.355, 1);
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-bottom-color: #8b7355;
+        }
+
+        .search-container.active .search-input {
+            width: 200px;
+            opacity: 1;
+            margin-right: 1rem;
+        }
+
+        .search-icon {
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .search-icon:hover {
+            color: #8b7355;
+        }
+
+        /* Mega Menu */
+        .megamenu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: #ffffff;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            padding: 2.5rem 0;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.4s cubic-bezier(0.215, 0.610, 0.355, 1);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-item:hover .megamenu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .megamenu-content {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+
+        .megamenu-column h3 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            color: #8b7355;
+        }
+
+        .megamenu-links {
+            list-style: none;
+        }
+
+        .megamenu-links li {
+            margin-bottom: 0.9rem;
+        }
+
+        .megamenu-links a {
+            color: #1a1a1a;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+            padding: 0.2rem 0;
+            position: relative;
+        }
+
+        .megamenu-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background-color: #8b7355;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .megamenu-links a:hover {
+            color: #8b7355;
+        }
+
+        .megamenu-links a:hover::after {
+            transform: scaleX(1);
+        }
+
+        .megamenu-image {
+            height: 250px;
+            background-color: #f5f3f0;
+            background-image: url('https://images.unsplash.com/photo-1592878904946-b3cd8ae243d0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80');
+            background-size: cover;
+            background-position: center;
+            margin-top: 2rem;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            height: 75vh;
+            background-color: #f5f3f0;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.03)), url('https://images.unsplash.com/photo-1558769132-cb1f458e43b5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 2rem;
+        }
+
+        .hero-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 500;
+            letter-spacing: -0.5px;
+            margin-bottom: 1rem;
+            color: #1a1a1a;
+        }
+
+        .hero-content p {
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            color: #4a4a4a;
+        }
+
+        .hero-button {
+            background-color: transparent;
+            color: #1a1a1a;
+            border: 1px solid #1a1a1a;
+            padding: 1rem 2.5rem;
+            font-size: 0.9rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .hero-button:hover {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+
+        /* Mobile Toggle */
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            color: #1a1a1a;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1100px) {
+            .nav-links {
+                gap: 1.5rem;
+            }
+            
+            .megamenu-content {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .luxury-navbar {
+                padding: 1.2rem 1.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-toggle {
+                display: block;
+            }
+            
+            .nav-actions {
+                gap: 1.2rem;
+            }
+            
+            .megamenu {
+                display: none;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .luxury-navbar {
+                padding: 1rem 1.2rem;
+            }
+            
+            .logo {
+                font-size: 1.5rem;
+            }
+            
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-content p {
+                font-size: 1rem;
+            }
+            
+            .search-container.active .search-input {
+                width: 150px;
+            }
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            z-index: 2000;
+            padding: 2rem;
+            transform: translateX(-100%);
+            transition: transform 0.5s cubic-bezier(0.215, 0.610, 0.355, 1);
+            overflow-y: auto;
+        }
+
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .mobile-menu-links {
+            list-style: none;
+        }
+
+        .mobile-menu-links li {
+            margin-bottom: 1.5rem;
+        }
+
+        .mobile-menu-links a {
+            color: #1a1a1a;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 0.5rem 0;
+            display: block;
+            position: relative;
+        }
+
+        .mobile-menu-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background-color: #8b7355;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-menu-links a:hover::after {
+            transform: scaleX(1);
+        }
+
+        .close-menu {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #1a1a1a;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Announcement Bar -->
+    <div class="announcement-bar">
+        Complimentary Shipping & Returns on All Orders
+    </div>
+
+    <!-- Main Navbar -->
+    <nav class="luxury-navbar">
+        <div class="nav-container">
+            <!-- Mobile Toggle -->
+            <button class="mobile-toggle" id="mobileToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Logo -->
+            <div class="logo-container">
+                <a href="#" class="logo">ÉLÉGANCE</a>
+            </div>
+
+            <!-- Desktop Navigation Links -->
+            <ul class="nav-links">
+                <li class="nav-item has-megamenu">
+                    <a href="#" class="nav-link">New Arrivals</a>
+                    <div class="megamenu">
+                        <div class="megamenu-content">
+                            <div class="megamenu-column">
+                                <h3>Women</h3>
+                                <ul class="megamenu-links">
+                                    <li><a href="#">Dresses & Gowns</a></li>
+                                    <li><a href="#">Tailoring</a></li>
+                                    <li><a href="#">Leather Goods</a></li>
+                                    <li><a href="#">Evening Wear</a></li>
+                                    <li><a href="#">Accessories</a></li>
+                                </ul>
+                            </div>
+                            <div class="megamenu-column">
+                                <h3>Men</h3>
+                                <ul class="megamenu-links">
+                                    <li><a href="#">Suits & Tailoring</a></li>
+                                    <li><a href="#">Leather Jackets</a></li>
+                                    <li><a href="#">Knitwear</a></li>
+                                    <li><a href="#">Evening Wear</a></li>
+                                    <li><a href="#">Accessories</a></li>
+                                </ul>
+                            </div>
+                            <div class="megamenu-column">
+                                <h3>Collections</h3>
+                                <ul class="megamenu-links">
+                                    <li><a href="#">Spring/Summer 2024</a></li>
+                                    <li><a href="#">Capsule Collection</a></li>
+                                    <li><a href="#">Heritage Pieces</a></li>
+                                    <li><a href="#">Limited Editions</a></li>
+                                </ul>
+                            </div>
+                            <div class="megamenu-column">
+                                <div class="megamenu-image"></div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Women</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Men</a>
+                </li>
+                <li class="nav-item has-megamenu">
+                    <a href="#" class="nav-link">Collections</a>
+                    <div class="megamenu">
+                        <div class="megamenu-content">
+                            <div class="megamenu-column">
+                                <h3>By Designer</h3>
+                                <ul class="megamenu-links">
+                                    <li><a href="#">Signature Collection</a></li>
+                                    <li><a href="#">Guest Designers</a></li>
+                                    <li><a href="#">Emerging Talent</a></li>
+                                </ul>
+                            </div>
+                            <div class="megamenu-column">
+                                <h3>By Category</h3>
+                                <ul class="megamenu-links">
+                                    <li><a href="#">Ready-to-Wear</a></li>
+                                    <li><a href="#">Couture</a></li>
+                                    <li><a href="#">Bridal</a></li>
+                                    <li><a href="#">Accessories</a></li>
+                                </ul>
+                            </div>
+                            <div class="megamenu-column">
+                                <h3>Lookbooks</h3>
+                                <ul class="megamenu-links">
+                                    <li><a href="#">Editorial</a></li>
+                                    <li><a href="#">Runway</a></li>
+                                    <li><a href="#">Street Style</a></li>
+                                </ul>
+                            </div>
+                            <div class="megamenu-column">
+                                <h3>Exclusives</h3>
+                                <ul class="megamenu-links">
+                                    <li><a href="#">Limited Editions</a></li>
+                                    <li><a href="#">Made to Order</a></li>
+                                    <li><a href="#">Archival Pieces</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Couture</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">World of Élégance</a>
+                </li>
+            </ul>
+
+            <!-- Actions -->
+            <div class="nav-actions">
+                <div class="search-container" id="searchContainer">
+                    <input type="text" class="search-input" placeholder="Search collections...">
+                    <a href="#" class="action-icon search-icon" id="searchIcon">
+                        <i class="fas fa-search"></i>
+                    </a>
+                </div>
+                
+                <a href="#" class="action-icon">
+                    <i class="far fa-user"></i>
+                </a>
+                
+                <a href="#" class="action-icon">
+                    <i class="far fa-heart"></i>
+                    <span class="wishlist-count">3</span>
+                </a>
+                
+                <a href="#" class="action-icon">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count">2</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <a href="#" class="logo">ÉLÉGANCE</a>
+            <button class="close-menu" id="closeMenu">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="mobile-menu-links">
+            <li><a href="#">New Arrivals</a></li>
+            <li><a href="#">Women</a></li>
+            <li><a href="#">Men</a></li>
+            <li><a href="#">Collections</a></li>
+            <li><a href="#">Couture</a></li>
+            <li><a href="#">World of Élégance</a></li>
+            <li><a href="#">Stores</a></li>
+            <li><a href="#">Services</a></li>
+        </ul>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>The Art of Timeless Style</h1>
+            <p>Discover our Spring/Summer 2024 collection, where heritage craftsmanship meets contemporary design.</p>
+            <button class="hero-button">Explore the Collection</button>
+        </div>
+    </section>
+
+    <!-- Feature Section -->
+    <div class="container" style="padding: 4rem 2rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;">
+        <div style="text-align: center;">
+            <h3 style="font-size: 0.9rem; font-weight: 600; letter-spacing: 1.5px; margin-bottom: 0.5rem; color: #8b7355;">COMPLIMENTARY SHIPPING</h3>
+            <p style="font-size: 0.9rem; color: #666;">On all orders worldwide</p>
+        </div>
+        <div style="text-align: center;">
+            <h3 style="font-size: 0.9rem; font-weight: 600; letter-spacing: 1.5px; margin-bottom: 0.5rem; color: #8b7355;">BY APPOINTMENT</h3>
+            <p style="font-size: 0.9rem; color: #666;">Personal styling services</p>
+        </div>
+        <div style="text-align: center;">
+            <h3 style="font-size: 0.9rem; font-weight: 600; letter-spacing: 1.5px; margin-bottom: 0.5rem; color: #8b7355;">CRAFTED TO LAST</h3>
+            <p style="font-size: 0.9rem; color: #666;">Lifetime guarantee on all pieces</p>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu functionality
+        const mobileToggle = document.getElementById('mobileToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const closeMenu = document.getElementById('closeMenu');
+        
+        mobileToggle.addEventListener('click', () => {
+            mobileMenu.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        
+        closeMenu.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+        
+        // Search functionality
+        const searchContainer = document.getElementById('searchContainer');
+        const searchIcon = document.getElementById('searchIcon');
+        
+        searchIcon.addEventListener('click', (e) => {
+            e.preventDefault();
+            searchContainer.classList.toggle('active');
+            
+            if (searchContainer.classList.contains('active')) {
+                searchContainer.querySelector('.search-input').focus();
+            }
+        });
+        
+        // Close search when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!searchContainer.contains(e.target) && !searchIcon.contains(e.target)) {
+                searchContainer.classList.remove('active');
+            }
+        });
+        
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.mobile-menu-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+        });
+        
+        // Smooth hover animations for nav items
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transition = 'all 0.3s ease';
+            });
+        });
+        
+        // Update cart count on interaction
+        const cartCount = document.querySelector('.cart-count');
+        const addToCartButtons = document.querySelectorAll('.hero-button');
+        
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                let currentCount = parseInt(cartCount.textContent);
+                cartCount.textContent = currentCount + 1;
+                
+                // Add animation
+                cartCount.style.transform = 'scale(1.3)';
+                setTimeout(() => {
+                    cartCount.style.transform = 'scale(1)';
+                }, 300);
+            });
+        });
+    </script>
+</body>
+</html>

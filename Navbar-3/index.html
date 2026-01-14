@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARKOS | Enterprise Navigation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Design System Tokens */
+            --color-primary: #0066FF;
+            --color-primary-dark: #0052CC;
+            --color-surface: #FFFFFF;
+            --color-surface-elevated: rgba(255, 255, 255, 0.96);
+            --color-surface-scrim: rgba(0, 0, 0, 0.08);
+            --color-border: rgba(0, 0, 0, 0.08);
+            --color-border-hover: rgba(0, 0, 0, 0.12);
+            --color-text-primary: #0A0B0D;
+            --color-text-secondary: #6B7280;
+            --color-text-tertiary: #9CA3AF;
+            --color-text-on-primary: #FFFFFF;
+            
+            /* Spacing Scale (4px base) */
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --space-8: 32px;
+            --space-10: 40px;
+            --space-12: 48px;
+            --space-16: 64px;
+            
+            /* Typography */
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            --font-size-xs: 12px;
+            --font-size-sm: 13px;
+            --font-size-base: 14px;
+            --font-size-lg: 15px;
+            --font-weight-normal: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 600;
+            --font-weight-bold: 700;
+            
+            /* Elevation */
+            --shadow-subtle: 0 1px 0 rgba(0, 0, 0, 0.04);
+            --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.04);
+            --shadow-menu: 0 12px 32px rgba(0, 0, 0, 0.08);
+            
+            /* Motion */
+            --transition-fast: 120ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+            
+            /* Layout */
+            --nav-height: 64px;
+            --nav-max-width: 1280px;
+            --breakpoint-md: 768px;
+            --breakpoint-lg: 1024px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-family);
+            background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-16);
+            color: var(--color-text-primary);
+            font-size: var(--font-size-base);
+            line-height: 1.5;
+        }
+        
+        /* Container for demonstration */
+        .demo-container {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--color-surface);
+            border-radius: 20px;
+            box-shadow: var(--shadow-medium);
+            overflow: hidden;
+            border: 1px solid var(--color-border);
+        }
+        
+        .demo-header {
+            padding: var(--space-10);
+            border-bottom: 1px solid var(--color-border);
+            background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
+        }
+        
+        .demo-title {
+            font-size: 32px;
+            font-weight: var(--font-weight-bold);
+            letter-spacing: -0.02em;
+            color: var(--color-text-primary);
+            margin-bottom: var(--space-2);
+        }
+        
+        .demo-subtitle {
+            font-size: var(--font-size-lg);
+            color: var(--color-text-secondary);
+            font-weight: var(--font-weight-medium);
+        }
+        
+        /* ============================================
+           NAVIGATION SYSTEM
+           ============================================ */
+        
+        .nav {
+            position: relative;
+            height: var(--nav-height);
+            background: var(--color-surface-elevated);
+            border-bottom: 1px solid var(--color-border);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        
+        .nav-container {
+            max-width: var(--nav-max-width);
+            height: 100%;
+            margin: 0 auto;
+            padding: 0 var(--space-6);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--space-8);
+        }
+        
+        /* Logo */
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            text-decoration: none;
+            color: var(--color-text-primary);
+            font-weight: var(--font-weight-bold);
+            font-size: 20px;
+            letter-spacing: -0.02em;
+            padding: var(--space-2);
+            border-radius: 8px;
+            transition: color var(--transition-fast);
+            flex-shrink: 0;
+        }
+        
+        .nav-logo:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+        
+        .nav-logo:hover {
+            color: var(--color-primary);
+        }
+        
+        .logo-mark {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text-on-primary);
+            font-weight: var(--font-weight-bold);
+            font-size: 16px;
+            transition: transform var(--transition-base);
+        }
+        
+        .nav-logo:hover .logo-mark {
+            transform: scale(1.05);
+        }
+        
+        /* Primary Navigation */
+        .nav-primary {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+            margin: 0 auto;
+        }
+        
+        .nav-item {
+            position: relative;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-3) var(--space-4);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all var(--transition-fast);
+            white-space: nowrap;
+        }
+        
+        .nav-link:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: -1px;
+        }
+        
+        .nav-link:hover {
+            color: var(--color-text-primary);
+            background: rgba(0, 0, 0, 0.02);
+        }
+        
+        .nav-link.active {
+            color: var(--color-primary);
+            font-weight: var(--font-weight-semibold);
+        }
+        
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -17px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background: var(--color-primary);
+            border-radius: 50%;
+            opacity: 1;
+            transition: opacity var(--transition-fast);
+        }
+        
+        .nav-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+            transition: opacity var(--transition-fast);
+        }
+        
+        .nav-link:hover .nav-icon,
+        .nav-link.active .nav-icon {
+            opacity: 1;
+        }
+        
+        /* Dropdown Menu */
+        .dropdown {
+            position: relative;
+        }
+        
+        .dropdown-toggle {
+            padding-right: var(--space-3);
+        }
+        
+        .dropdown-toggle::after {
+            content: '';
+            width: 16px;
+            height: 16px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.5;
+            transition: transform var(--transition-fast), opacity var(--transition-fast);
+        }
+        
+        .nav-link:hover .dropdown-toggle::after {
+            opacity: 0.7;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + var(--space-2));
+            left: 0;
+            min-width: 240px;
+            background: var(--color-surface-elevated);
+            border-radius: 12px;
+            box-shadow: var(--shadow-menu);
+            border: 1px solid var(--color-border);
+            padding: var(--space-2);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-4px);
+            transition: all var(--transition-base);
+            z-index: 1000;
+        }
+        
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-4);
+            text-decoration: none;
+            color: var(--color-text-primary);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            border-radius: 8px;
+            transition: all var(--transition-fast);
+        }
+        
+        .dropdown-item:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: -1px;
+        }
+        
+        .dropdown-item:hover {
+            background: rgba(0, 0, 0, 0.02);
+            color: var(--color-primary);
+        }
+        
+        .dropdown-item-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.6;
+        }
+        
+        .dropdown-item:hover .dropdown-item-icon {
+            opacity: 1;
+        }
+        
+        .dropdown-divider {
+            height: 1px;
+            background: var(--color-border);
+            margin: var(--space-2) 0;
+        }
+        
+        /* Secondary Navigation */
+        .nav-secondary {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            flex-shrink: 0;
+        }
+        
+        .nav-link-secondary {
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            padding: var(--space-3);
+            border-radius: 8px;
+            transition: all var(--transition-fast);
+        }
+        
+        .nav-link-secondary:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+        
+        .nav-link-secondary:hover {
+            color: var(--color-text-primary);
+            background: rgba(0, 0, 0, 0.02);
+        }
+        
+        /* CTA Buttons */
+        .nav-cta {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-3) var(--space-5);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+            text-decoration: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            border: none;
+            outline: none;
+            white-space: nowrap;
+        }
+        
+        .btn:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--color-text-secondary);
+            border: 1px solid var(--color-border);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(0, 0, 0, 0.02);
+            border-color: var(--color-border-hover);
+            color: var(--color-text-primary);
+        }
+        
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-text-on-primary);
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
+        }
+        
+        .btn-primary:hover {
+            background: var(--color-primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 102, 255, 0.16);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        /* Mobile Toggle */
+        .mobile-toggle {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        
+        .mobile-toggle:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+        
+        .mobile-toggle:hover {
+            background: rgba(0, 0, 0, 0.02);
+            border-color: var(--color-border-hover);
+        }
+        
+        .toggle-icon {
+            width: 20px;
+            height: 20px;
+            color: var(--color-text-secondary);
+        }
+        
+        /* Mobile Navigation */
+        .mobile-nav {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--color-surface-elevated);
+            border-top: 1px solid var(--color-border);
+            box-shadow: var(--shadow-medium);
+            padding: var(--space-4);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all var(--transition-base);
+            z-index: 999;
+        }
+        
+        .mobile-nav.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .mobile-nav-section {
+            padding-bottom: var(--space-4);
+            margin-bottom: var(--space-4);
+            border-bottom: 1px solid var(--color-border);
+        }
+        
+        .mobile-nav-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .mobile-nav-link {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-4);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text-primary);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all var(--transition-fast);
+            margin-bottom: var(--space-2);
+        }
+        
+        .mobile-nav-link:last-child {
+            margin-bottom: 0;
+        }
+        
+        .mobile-nav-link:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: -1px;
+        }
+        
+        .mobile-nav-link:hover {
+            background: rgba(0, 0, 0, 0.02);
+            color: var(--color-primary);
+        }
+        
+        .mobile-nav-cta {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+            padding-top: var(--space-4);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .nav-primary,
+            .nav-secondary {
+                display: none;
+            }
+            
+            .mobile-toggle {
+                display: flex;
+            }
+            
+            .mobile-nav {
+                display: block;
+            }
+            
+            .nav-cta {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 var(--space-4);
+            }
+            
+            .demo-container {
+                border-radius: 12px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .nav-logo span {
+                display: none;
+            }
+        }
+        
+        /* Demo Controls */
+        .demo-controls {
+            padding: var(--space-8);
+            background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%);
+            border-top: 1px solid var(--color-border);
+        }
+        
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: var(--space-6);
+            flex-wrap: wrap;
+        }
+        
+        .control-label {
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-2);
+        }
+        
+        .control-buttons {
+            display: flex;
+            gap: var(--space-2);
+            flex-wrap: wrap;
+        }
+        
+        .control-btn {
+            padding: var(--space-2) var(--space-4);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            color: var(--color-text-secondary);
+        }
+        
+        .control-btn:hover {
+            background: rgba(0, 0, 0, 0.02);
+            border-color: var(--color-border-hover);
+            color: var(--color-text-primary);
+        }
+        
+        .control-btn.active {
+            background: var(--color-primary);
+            color: var(--color-text-on-primary);
+            border-color: var(--color-primary);
+        }
+        
+        .demo-note {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-tertiary);
+            font-style: italic;
+            margin-top: var(--space-4);
+            padding: var(--space-4);
+            background: var(--color-surface);
+            border-radius: 8px;
+            border-left: 3px solid var(--color-primary);
+        }
+        
+        /* Focus states for accessibility */
+        *:focus {
+            outline: none;
+        }
+        
+        *:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+        
+        /* Scroll state */
+        .nav.scrolled {
+            box-shadow: var(--shadow-medium);
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1 class="demo-title">ARKOS Navigation System</h1>
+            <p class="demo-subtitle">Enterprise-grade navigation designed for clarity and conversion</p>
+        </div>
+        
+        <!-- Navigation -->
+        <nav class="nav" id="mainNav">
+            <div class="nav-container">
+                <!-- Logo -->
+                <a href="#" class="nav-logo">
+                    <div class="logo-mark">A</div>
+                    <span>ARKOS</span>
+                </a>
+                
+                <!-- Primary Navigation -->
+                <div class="nav-primary">
+                    <div class="nav-item">
+                        <a href="#" class="nav-link active">
+                            <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                            </svg>
+                            Home
+                        </a>
+                    </div>
+                    
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle">
+                            <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                            </svg>
+                            Products
+                        </a>
+                        <div class="dropdown-menu">
+                            <a href="#" class="dropdown-item">
+                                <svg class="dropdown-item-icon" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
+                                </svg>
+                                Analytics Platform
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <svg class="dropdown-item-icon" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"/>
+                                </svg>
+                                Performance Suite
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <svg class="dropdown-item-icon" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M12 1.586l-4 4v12.828l4-4V1.586zM3.707 3.293A1 1 0 002 4v10a1 1 0 00.293.707l3 3a1 1 0 001.414 0l10-10a1 1 0 000-1.414l-3-3a1 1 0 00-1.414 0l-3 3-2-2-1.414 1.414 2 2-3 3-1.414-1.414 3-3-2-2-1.414 1.414 2 2-3 3-1.414-1.414 3-3z" clip-rule="evenodd"/>
+                                </svg>
+                                All Products
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="nav-item">
+                        <a href="#" class="nav-link">
+                            <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/>
+                            </svg>
+                            Solutions
+                        </a>
+                    </div>
+                    
+                    <div class="nav-item">
+                        <a href="#" class="nav-link">
+                            <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                            </svg>
+                            Resources
+                        </a>
+                    </div>
+                    
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle">
+                            <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/>
+                            </svg>
+                            Enterprise
+                        </a>
+                        <div class="dropdown-menu">
+                            <a href="#" class="dropdown-item">
+                                <svg class="dropdown-item-icon" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                                Security & Compliance
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <svg class="dropdown-item-icon" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M13 7H7v6h6V7z"/>
+                                    <path fill-rule="evenodd" d="M7 2a1 1 0 012 0v1h2V2a1 1 0 112 0v1h2a2 2 0 012 2v2h1a1 1 0 110 2h-1v2h1a1 1 0 110 2h-1v2a2 2 0 01-2 2h-2v1a1 1 0 11-2 0v-1H9v1a1 1 0 11-2 0v-1H5a2 2 0 01-2-2v-2H2a1 1 0 110-2h1V9H2a1 1 0 010-2h1V5a2 2 0 012-2h2V2zM5 5h10v10H5V5z" clip-rule="evenodd"/>
+                                </svg>
+                                Scaling Infrastructure
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Secondary Navigation -->
+                <div class="nav-secondary">
+                    <a href="#" class="nav-link-secondary">Documentation</a>
+                    <a href="#" class="nav-link-secondary">Support</a>
+                </div>
+                
+                <!-- CTA Buttons -->
+                <div class="nav-cta">
+                    <a href="#" class="btn btn-secondary">Contact Sales</a>
+                    <a href="#" class="btn btn-primary">Start Trial</a>
+                </div>
+                
+                <!-- Mobile Toggle -->
+                <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">
+                    <svg class="toggle-icon" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Mobile Navigation -->
+            <div class="mobile-nav" id="mobileNav">
+                <div class="mobile-nav-section">
+                    <a href="#" class="mobile-nav-link">
+                        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                        </svg>
+                        Home
+                    </a>
+                    <a href="#" class="mobile-nav-link">
+                        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
+                        </svg>
+                        Products
+                    </a>
+                    <a href="#" class="mobile-nav-link">
+                        <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/>
+                        </svg>
+                        Solutions
+                    </a>
+                </div>
+                
+                <div class="mobile-nav-section">
+                    <a href="#" class="mobile-nav-link">Documentation</a>
+                    <a href="#" class="mobile-nav-link">Support</a>
+                    <a href="#" class="mobile-nav-link">Enterprise</a>
+                </div>
+                
+                <div class="mobile-nav-cta">
+                    <a href="#" class="btn btn-secondary">Contact Sales</a>
+                    <a href="#" class="btn btn-primary">Start Trial</a>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Demo Controls -->
+        <div class="demo-controls">
+            <div class="control-group">
+                <div>
+                    <div class="control-label">Viewport</div>
+                    <div class="control-buttons">
+                        <button class="control-btn active" onclick="setViewport('desktop')">Desktop</button>
+                        <button class="control-btn" onclick="setViewport('tablet')">Tablet</button>
+                        <button class="control-btn" onclick="setViewport('mobile')">Mobile</button>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="control-label">States</div>
+                    <div class="control-buttons">
+                        <button class="control-btn" onclick="toggleScrollState()">Scroll Effect</button>
+                        <button class="control-btn" onclick="toggleMobileMenu()">Mobile Menu</button>
+                        <button class="control-btn" onclick="highlightCTAs()">Highlight CTAs</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="demo-note">
+                Navigation designed with precision spacing (4px base), systematic color tokens, and intentional hierarchy.
+                Hover over elements to experience refined micro-interactions. Try tab navigation for accessibility testing.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        const mobileToggle = document.getElementById('mobileToggle');
+        const mobileNav = document.getElementById('mobileNav');
+        
+        mobileToggle.addEventListener('click', () => {
+            mobileNav.classList.toggle('active');
+            mobileToggle.setAttribute('aria-expanded', mobileNav.classList.contains('active'));
+        });
+        
+        // Close mobile menu on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && mobileNav.classList.contains('active')) {
+                mobileNav.classList.remove('active');
+                mobileToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+        
+        // Viewport simulation
+        function setViewport(type) {
+            const nav = document.getElementById('mainNav');
+            const buttons = document.querySelectorAll('.control-btn');
+            
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Reset styles
+            nav.style.width = '';
+            nav.style.margin = '';
+            nav.style.maxWidth = '';
+            
+            switch(type) {
+                case 'desktop':
+                    nav.style.maxWidth = '1280px';
+                    nav.style.margin = '0 auto';
+                    break;
+                case 'tablet':
+                    nav.style.width = '768px';
+                    nav.style.margin = '0 auto';
+                    break;
+                case 'mobile':
+                    nav.style.width = '375px';
+                    nav.style.margin = '0 auto';
+                    break;
+            }
+        }
+        
+        // Scroll state effect
+        function toggleScrollState() {
+            const nav = document.getElementById('mainNav');
+            nav.classList.toggle('scrolled');
+        }
+        
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            mobileNav.classList.toggle('active');
+            mobileToggle.setAttribute('aria-expanded', mobileNav.classList.contains('active'));
+        }
+        
+        // Highlight CTAs
+        function highlightCTAs() {
+            const ctas = document.querySelectorAll('.btn-primary, .btn-secondary');
+            ctas.forEach(btn => {
+                btn.style.boxShadow = '0 0 0 2px rgba(0, 102, 255, 0.2)';
+                setTimeout(() => {
+                    btn.style.boxShadow = '';
+                }, 1000);
+            });
+        }
+        
+        // Active link handling
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (!link.classList.contains('dropdown-toggle')) {
+                    e.preventDefault();
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                }
+            });
+        });
+        
+        // Initialize with desktop view
+        setViewport('desktop');
+    </script>
+</body>
+</html>

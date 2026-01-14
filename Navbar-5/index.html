@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horizon | Navigation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS Reset and Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        :root {
+            --color-primary: #121212;
+            --color-secondary: #2D2D2D;
+            --color-accent: #1A73E8;
+            --color-text-primary: #1D1D1D;
+            --color-text-secondary: #5F6368;
+            --color-text-tertiary: #80868B;
+            --color-surface: #FFFFFF;
+            --color-border: #E0E0E0;
+            --color-hover: #F8F9FA;
+            --color-active: #F1F3F4;
+            --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            --font-weight-regular: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 600;
+            --transition-base: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.03);
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background-color: var(--color-surface);
+            color: var(--color-text-primary);
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* Navbar Container */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            background-color: var(--color-surface);
+            border-bottom: 1px solid var(--color-border);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 24px;
+            transition: all var(--transition-base);
+        }
+
+        .navbar-container {
+            width: 100%;
+            max-width: 1280px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Logo */
+        .navbar-logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            gap: 12px;
+        }
+
+        .logo-mark {
+            width: 32px;
+            height: 32px;
+            background-color: var(--color-primary);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-surface);
+            font-weight: var(--font-weight-semibold);
+            font-size: 16px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-text-primary);
+            letter-spacing: -0.25px;
+        }
+
+        /* Navigation Links */
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 40px;
+            margin: 0 48px;
+        }
+
+        .nav-link {
+            position: relative;
+            text-decoration: none;
+            color: var(--color-text-secondary);
+            font-weight: var(--font-weight-medium);
+            font-size: 14px;
+            letter-spacing: 0.1px;
+            padding: 8px 0;
+            transition: color var(--transition-base);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--color-accent);
+            transform: scaleX(0);
+            transition: transform var(--transition-base);
+            transform-origin: center;
+        }
+
+        .nav-link:hover {
+            color: var(--color-text-primary);
+        }
+
+        .nav-link.active {
+            color: var(--color-text-primary);
+        }
+
+        .nav-link.active::after {
+            transform: scaleX(1);
+        }
+
+        /* Actions */
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nav-button {
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: var(--font-weight-medium);
+            letter-spacing: 0.1px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            border: none;
+            outline: none;
+        }
+
+        .nav-button.secondary {
+            background-color: transparent;
+            color: var(--color-text-secondary);
+            border: 1px solid var(--color-border);
+        }
+
+        .nav-button.secondary:hover {
+            background-color: var(--color-hover);
+            border-color: var(--color-text-tertiary);
+        }
+
+        .nav-button.primary {
+            background-color: var(--color-accent);
+            color: var(--color-surface);
+        }
+
+        .nav-button.primary:hover {
+            background-color: #1967D2;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: background-color var(--transition-base);
+        }
+
+        .mobile-toggle:hover {
+            background-color: var(--color-hover);
+        }
+
+        .toggle-icon {
+            width: 20px;
+            height: 2px;
+            background-color: var(--color-text-primary);
+            position: relative;
+            transition: transform var(--transition-base);
+        }
+
+        .toggle-icon::before,
+        .toggle-icon::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 2px;
+            background-color: var(--color-text-primary);
+            left: 0;
+            transition: transform var(--transition-base);
+        }
+
+        .toggle-icon::before {
+            top: -6px;
+        }
+
+        .toggle-icon::after {
+            bottom: -6px;
+        }
+
+        .mobile-toggle.active .toggle-icon {
+            background-color: transparent;
+        }
+
+        .mobile-toggle.active .toggle-icon::before {
+            transform: translateY(6px) rotate(45deg);
+        }
+
+        .mobile-toggle.active .toggle-icon::after {
+            transform: translateY(-6px) rotate(-45deg);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            width: 100%;
+            height: calc(100vh - 64px);
+            background-color: var(--color-surface);
+            z-index: 999;
+            padding: 24px;
+            transform: translateX(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+
+        .mobile-links {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+
+        .mobile-link {
+            display: block;
+            text-decoration: none;
+            color: var(--color-text-primary);
+            font-weight: var(--font-weight-medium);
+            font-size: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--color-border);
+            transition: color var(--transition-base);
+        }
+
+        .mobile-link:hover {
+            color: var(--color-accent);
+        }
+
+        .mobile-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: auto;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .nav-links {
+                gap: 32px;
+                margin: 0 32px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 16px;
+                height: 60px;
+            }
+
+            .nav-links,
+            .nav-actions {
+                display: none;
+            }
+
+            .mobile-toggle {
+                display: flex;
+            }
+
+            .navbar-logo {
+                gap: 10px;
+            }
+
+            .logo-text {
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 0 12px;
+            }
+
+            .logo-text {
+                font-size: 16px;
+            }
+
+            .mobile-menu {
+                padding: 20px;
+            }
+        }
+
+        /* Demo Content */
+        .content {
+            margin-top: 64px;
+            padding: 60px 24px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .content h1 {
+            font-size: 40px;
+            font-weight: var(--font-weight-semibold);
+            letter-spacing: -0.5px;
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+
+        .content p {
+            font-size: 18px;
+            color: var(--color-text-secondary);
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .content-divider {
+            height: 1px;
+            background-color: var(--color-border);
+            margin: 40px 0;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 40px 16px;
+                margin-top: 60px;
+            }
+
+            .content h1 {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <!-- Logo -->
+            <a href="#" class="navbar-logo">
+                <div class="logo-mark">H</div>
+                <div class="logo-text">Horizon</div>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <ul class="nav-links">
+                <li><a href="#" class="nav-link active">Product</a></li>
+                <li><a href="#" class="nav-link">Solutions</a></li>
+                <li><a href="#" class="nav-link">Enterprise</a></li>
+                <li><a href="#" class="nav-link">Resources</a></li>
+                <li><a href="#" class="nav-link">Pricing</a></li>
+            </ul>
+
+            <!-- Desktop Actions -->
+            <div class="nav-actions">
+                <button class="nav-button secondary">Sign in</button>
+                <button class="nav-button primary">Get started</button>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-toggle" id="mobileToggle">
+                <span class="toggle-icon"></span>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <ul class="mobile-links">
+                <li><a href="#" class="mobile-link">Product</a></li>
+                <li><a href="#" class="mobile-link">Solutions</a></li>
+                <li><a href="#" class="mobile-link">Enterprise</a></li>
+                <li><a href="#" class="mobile-link">Resources</a></li>
+                <li><a href="#" class="mobile-link">Pricing</a></li>
+                <li><a href="#" class="mobile-link">Contact</a></li>
+            </ul>
+            <div class="mobile-actions">
+                <button class="nav-button secondary" style="width: 100%;">Sign in</button>
+                <button class="nav-button primary" style="width: 100%;">Get started</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Demo Content -->
+    <main class="content">
+        <h1>Built for scale, designed for precision</h1>
+        <p>Horizon powers the world's most demanding digital operations with reliability that never compromises on performance. Our platform handles billions of transactions daily while maintaining sub-millisecond latency.</p>
+        <p>Trusted by industry leaders across finance, healthcare, and global logistics, Horizon represents the standard for enterprise-grade digital infrastructure.</p>
+        <div class="content-divider"></div>
+        <p>This navigation component demonstrates the principles of timeless design: balanced proportions, deliberate spacing, and interactions that feel intuitive rather than decorative.</p>
+    </main>
+
+    <script>
+        // Mobile menu toggle
+        const mobileToggle = document.getElementById('mobileToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        mobileToggle.addEventListener('click', () => {
+            mobileToggle.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!mobileToggle.contains(event.target) && !mobileMenu.contains(event.target)) {
+                mobileToggle.classList.remove('active');
+                mobileMenu.classList.remove('active');
+            }
+        });
+
+        // Navigation link interactions
+        const navLinks = document.querySelectorAll('.nav-link');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                navLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                
+                // Close mobile menu if open
+                mobileToggle.classList.remove('active');
+                mobileMenu.classList.remove('active');
+            });
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                mobileLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                
+                // Update desktop nav
+                const linkText = link.textContent;
+                navLinks.forEach(navLink => {
+                    if (navLink.textContent === linkText) {
+                        navLinks.forEach(nl => nl.classList.remove('active'));
+                        navLink.classList.add('active');
+                    }
+                });
+                
+                // Close mobile menu
+                mobileToggle.classList.remove('active');
+                mobileMenu.classList.remove('active');
+            });
+        });
+
+        // Button interactions
+        const buttons = document.querySelectorAll('.nav-button');
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Add subtle feedback
+                button.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    button.style.transform = '';
+                }, 150);
+                
+                // Simulate action
+                if (button.textContent.includes('Get started')) {
+                    console.log('Initiate sign-up flow');
+                } else if (button.textContent.includes('Sign in')) {
+                    console.log('Initiate sign-in flow');
+                }
+            });
+        });
+
+        // Navbar scroll behavior
+        const navbar = document.querySelector('.navbar');
+        let lastScrollTop = 0;
+
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > 64) {
+                navbar.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.08)';
+            } else {
+                navbar.style.boxShadow = 'none';
+            }
+            
+            lastScrollTop = scrollTop;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>NativeNav | Adaptive Mobile-First Navbar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== CSS RESET & VARIABLES ===== */
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #7c3aed;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-600: #475569;
+            --gray-800: #1e293b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-full: 9999px;
+            
+            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+            
+            --safe-area-top: env(safe-area-inset-top, 0px);
+            --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding-top: calc(60px + var(--safe-area-top));
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== MOBILE-FIRST NAVBAR ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--gray-200);
+            padding-top: var(--safe-area-top);
+            transition: background-color var(--transition-base), 
+                        border-color var(--transition-base),
+                        box-shadow var(--transition-base);
+        }
+
+        .navbar.scrolled {
+            background-color: rgba(255, 255, 255, 0.98);
+            box-shadow: var(--shadow-md);
+            border-bottom-color: transparent;
+        }
+
+        .navbar-container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 1rem;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Logo */
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--dark);
+            transition: transform var(--transition-fast);
+            padding: 0.5rem;
+            border-radius: var(--radius-md);
+        }
+
+        .logo:active {
+            transform: scale(0.95);
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.125rem;
+            transition: transform var(--transition-base);
+        }
+
+        .logo:hover .logo-icon {
+            transform: rotate(15deg);
+        }
+
+        /* Hamburger Menu - Mobile Only */
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 48px;
+            height: 48px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.75rem;
+            border-radius: var(--radius-md);
+            transition: background-color var(--transition-fast);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .hamburger:active {
+            background-color: var(--gray-200);
+        }
+
+        .hamburger-line {
+            width: 24px;
+            height: 2px;
+            background-color: var(--gray-800);
+            border-radius: 1px;
+            transition: all var(--transition-base);
+            transform-origin: center;
+        }
+
+        .hamburger-line:nth-child(1) {
+            margin-bottom: 6px;
+        }
+
+        .hamburger-line:nth-child(3) {
+            margin-top: 6px;
+        }
+
+        /* Hamburger Animation States */
+        .hamburger.active .hamburger-line:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+        }
+
+        .hamburger.active .hamburger-line:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+
+        .hamburger.active .hamburger-line:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+        }
+
+        /* Desktop Navigation (Hidden on Mobile) */
+        .desktop-nav {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .desktop-nav-links {
+            display: flex;
+            list-style: none;
+            gap: 0.25rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--gray-600);
+            font-weight: 500;
+            font-size: 0.9375rem;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            transition: all var(--transition-fast);
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+            background-color: var(--gray-100);
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 1rem;
+            right: 1rem;
+            height: 3px;
+            background-color: var(--primary);
+            border-radius: var(--radius-full);
+        }
+
+        /* Mobile Navigation Drawer */
+        .mobile-nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-slow), visibility var(--transition-slow);
+            backdrop-filter: blur(2px);
+        }
+
+        .mobile-nav-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-nav-drawer {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 85%;
+            max-width: 320px;
+            height: 100%;
+            background-color: white;
+            z-index: 1000;
+            transition: right var(--transition-slow);
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+        }
+
+        .mobile-nav-drawer.active {
+            right: 0;
+        }
+
+        /* Mobile Drawer Header */
+        .drawer-header {
+            padding: calc(1rem + var(--safe-area-top)) 1.5rem 1rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .drawer-close {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray-600);
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            transition: background-color var(--transition-fast);
+        }
+
+        .drawer-close:active {
+            background-color: var(--gray-200);
+        }
+
+        /* Mobile Drawer Content */
+        .drawer-content {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 1.5rem;
+        }
+
+        .mobile-nav-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .mobile-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            text-decoration: none;
+            color: var(--gray-800);
+            font-weight: 500;
+            font-size: 1rem;
+            border-radius: var(--radius-md);
+            transition: background-color var(--transition-fast);
+            position: relative;
+        }
+
+        .mobile-nav-link:active {
+            background-color: var(--gray-200);
+        }
+
+        .mobile-nav-link i {
+            width: 24px;
+            font-size: 1.125rem;
+            color: var(--gray-600);
+        }
+
+        .mobile-nav-link.active {
+            color: var(--primary);
+            background-color: rgba(37, 99, 235, 0.1);
+            font-weight: 600;
+        }
+
+        .mobile-nav-link.active i {
+            color: var(--primary);
+        }
+
+        /* Mobile Drawer Footer */
+        .drawer-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .drawer-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .drawer-button.primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+        }
+
+        .drawer-button.primary:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+        }
+
+        .drawer-button.secondary {
+            background-color: var(--gray-100);
+            color: var(--gray-800);
+        }
+
+        .drawer-button.secondary:active {
+            background-color: var(--gray-200);
+        }
+
+        /* Desktop Actions (Hidden on Mobile) */
+        .desktop-actions {
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .desktop-button {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 0.9375rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            border: none;
+            white-space: nowrap;
+        }
+
+        .desktop-button.secondary {
+            background-color: transparent;
+            color: var(--gray-600);
+            border: 1px solid var(--gray-300);
+        }
+
+        .desktop-button.secondary:hover {
+            background-color: var(--gray-100);
+            border-color: var(--gray-400);
+        }
+
+        .desktop-button.primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+        }
+
+        .desktop-button.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+        }
+
+        .desktop-button.primary:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+        }
+
+        /* Badge for Notifications */
+        .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background-color: var(--danger);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            min-width: 18px;
+            height: 18px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            border: 2px solid white;
+        }
+
+        /* Demo Content */
+        .content {
+            flex: 1;
+            padding: 2rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .section {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        p {
+            color: var(--gray-600);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .device-mockup {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .device {
+            width: 280px;
+            height: 560px;
+            background: white;
+            border-radius: 36px;
+            padding: 20px;
+            box-shadow: var(--shadow-xl);
+            border: 12px solid var(--dark);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .device::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 24px;
+            background: var(--dark);
+            border-radius: 0 0 12px 12px;
+            z-index: 1;
+        }
+
+        .device-screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 24px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .device-navbar {
+            height: 60px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        /* ===== RESPONSIVE BREAKPOINTS ===== */
+        /* Tablet (640px and up) */
+        @media (min-width: 640px) {
+            .navbar-container {
+                padding: 0 1.5rem;
+            }
+            
+            .content {
+                padding: 2rem 1.5rem;
+            }
+            
+            .mobile-nav-drawer {
+                width: 70%;
+                max-width: 380px;
+            }
+        }
+
+        /* Small Desktop (768px and up) */
+        @media (min-width: 768px) {
+            .hamburger {
+                display: none;
+            }
+            
+            .desktop-nav {
+                display: flex;
+                margin-left: 2rem;
+            }
+            
+            .desktop-actions {
+                display: flex;
+                margin-left: auto;
+            }
+            
+            .mobile-nav-overlay,
+            .mobile-nav-drawer {
+                display: none;
+            }
+            
+            .navbar-container {
+                padding: 0 2rem;
+            }
+            
+            .content {
+                padding: 3rem 2rem;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Large Desktop (1024px and up) */
+        @media (min-width: 1024px) {
+            .navbar-container {
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+            
+            .desktop-nav-links {
+                gap: 0.5rem;
+            }
+            
+            .desktop-actions {
+                gap: 1rem;
+            }
+            
+            .content {
+                padding: 4rem 2rem;
+            }
+            
+            .section {
+                padding: 3rem;
+            }
+        }
+
+        /* Extra Large Desktop (1280px and up) */
+        @media (min-width: 1280px) {
+            .navbar-container {
+                padding: 0;
+            }
+            
+            .content {
+                max-width: 1200px;
+            }
+        }
+
+        /* Dark Mode Support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --dark: #f8fafc;
+                --light: #0f172a;
+                --gray-100: #1e293b;
+                --gray-200: #334155;
+                --gray-300: #475569;
+                --gray-600: #cbd5e1;
+                --gray-800: #f1f5f9;
+            }
+            
+            .navbar {
+                background-color: rgba(15, 23, 42, 0.98);
+                border-bottom: 1px solid var(--gray-800);
+            }
+            
+            .navbar.scrolled {
+                background-color: rgba(15, 23, 42, 0.98);
+            }
+            
+            .mobile-nav-drawer {
+                background-color: #0f172a;
+            }
+            
+            .drawer-header {
+                border-bottom-color: var(--gray-800);
+            }
+            
+            .mobile-nav-link {
+                color: var(--gray-600);
+            }
+            
+            .mobile-nav-link.active {
+                color: var(--primary);
+                background-color: rgba(37, 99, 235, 0.2);
+            }
+            
+            .drawer-button.secondary {
+                background-color: var(--gray-800);
+                color: var(--dark);
+            }
+            
+            .section {
+                background: #1e293b;
+                border-color: var(--gray-800);
+            }
+            
+            h1, h2 {
+                color: var(--dark);
+            }
+            
+            p {
+                color: var(--gray-600);
+            }
+            
+            .device {
+                border-color: #334155;
+            }
+            
+            .device::before {
+                background: #334155;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .navbar,
+            .device-mockup {
+                display: none;
+            }
+            
+            body {
+                padding-top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile-First Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <!-- Logo -->
+            <a href="#" class="logo">
+                <div class="logo-icon">N</div>
+                <span>NativeNav</span>
+            </a>
+
+            <!-- Desktop Navigation (Hidden on Mobile) -->
+            <nav class="desktop-nav">
+                <ul class="desktop-nav-links">
+                    <li>
+                        <a href="#home" class="nav-link active">
+                            <i class="fas fa-home"></i>
+                            Home
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#features" class="nav-link">
+                            <i class="fas fa-star"></i>
+                            Features
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#solutions" class="nav-link">
+                            <i class="fas fa-cube"></i>
+                            Solutions
+                            <span class="badge">3</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#pricing" class="nav-link">
+                            <i class="fas fa-tag"></i>
+                            Pricing
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#resources" class="nav-link">
+                            <i class="fas fa-book"></i>
+                            Resources
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Desktop Actions (Hidden on Mobile) -->
+            <div class="desktop-actions">
+                <button class="desktop-button secondary">
+                    Sign In
+                </button>
+                <button class="desktop-button primary">
+                    Get Started Free
+                </button>
+            </div>
+
+            <!-- Hamburger Menu (Mobile Only) -->
+            <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="mobile-nav-overlay" id="mobileOverlay"></div>
+
+    <!-- Mobile Navigation Drawer -->
+    <aside class="mobile-nav-drawer" id="mobileDrawer">
+        <div class="drawer-header">
+            <a href="#" class="logo">
+                <div class="logo-icon">N</div>
+                <span>NativeNav</span>
+            </a>
+            <button class="drawer-close" id="drawerClose" aria-label="Close menu">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="drawer-content">
+            <ul class="mobile-nav-links">
+                <li>
+                    <a href="#home" class="mobile-nav-link active">
+                        <i class="fas fa-home"></i>
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a href="#features" class="mobile-nav-link">
+                        <i class="fas fa-star"></i>
+                        Features
+                    </a>
+                </li>
+                <li>
+                    <a href="#solutions" class="mobile-nav-link">
+                        <i class="fas fa-cube"></i>
+                        Solutions
+                        <span class="badge">3</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#pricing" class="mobile-nav-link">
+                        <i class="fas fa-tag"></i>
+                        Pricing
+                    </a>
+                </li>
+                <li>
+                    <a href="#resources" class="mobile-nav-link">
+                        <i class="fas fa-book"></i>
+                        Resources
+                    </a>
+                </li>
+                <li>
+                    <a href="#contact" class="mobile-nav-link">
+                        <i class="fas fa-envelope"></i>
+                        Contact
+                    </a>
+                </li>
+                <li>
+                    <a href="#about" class="mobile-nav-link">
+                        <i class="fas fa-info-circle"></i>
+                        About
+                    </a>
+                </li>
+                <li>
+                    <a href="#blog" class="mobile-nav-link">
+                        <i class="fas fa-newspaper"></i>
+                        Blog
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="drawer-footer">
+            <button class="drawer-button primary">
+                <i class="fas fa-rocket"></i>
+                Get Started Free
+            </button>
+            <button class="drawer-button secondary">
+                <i class="fas fa-sign-in-alt"></i>
+                Sign In
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content">
+        <section class="section" id="home">
+            <h1>Mobile-First Responsive Navbar</h1>
+            <p>This navbar demonstrates a complete mobile-first approach with adaptive layout behavior, smooth animations, and touch-friendly interactions.</p>
+            
+            <h2>Key Features</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+                <div style="padding: 1.5rem; background: var(--gray-100); border-radius: var(--radius-md);">
+                    <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">🎯 Mobile-First</h3>
+                    <p style="font-size: 0.9375rem;">Designed for mobile screens first, then enhanced for tablets and desktops.</p>
+                </div>
+                <div style="padding: 1.5rem; background: var(--gray-100); border-radius: var(--radius-md);">
+                    <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">⚡ Fast & Smooth</h3>
+                    <p style="font-size: 0.9375rem;">Optimized animations and transitions for native app-like feel.</p>
+                </div>
+                <div style="padding: 1.5rem; background: var(--gray-100); border-radius: var(--radius-md);">
+                    <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">👆 Touch-Friendly</h3>
+                    <p style="font-size: 0.9375rem;">Adequate spacing and touch targets for mobile interaction.</p>
+                </div>
+                <div style="padding: 1.5rem; background: var(--gray-100); border-radius: var(--radius-md);">
+                    <h3 style="font-size: 1.125rem; margin-bottom: 0.5rem;">🎨 Adaptive Layout</h3>
+                    <p style="font-size: 0.9375rem;">Seamlessly adapts from mobile to desktop with appropriate controls.</p>
+                </div>
+            </div>
+
+            <div class="device-mockup">
+                <div class="device">
+                    <div class="device-screen">
+                        <div class="device-navbar">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #2563eb, #7c3aed); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">N</div>
+                                <span style="font-weight: 600; font-size: 0.9375rem;">NativeNav</span>
+                            </div>
+                            <button style="width: 40px; height: 40px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px; background: none; border: none; padding: 8px;">
+                                <span style="width: 20px; height: 2px; background: #475569; border-radius: 1px;"></span>
+                                <span style="width: 20px; height: 2px; background: #475569; border-radius: 1px;"></span>
+                                <span style="width: 20px; height: 2px; background: #475569; border-radius: 1px;"></span>
+                            </button>
+                        </div>
+                        <div style="padding: 1rem; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 1rem;">
+                            <div style="font-size: 1.25rem; font-weight: 600; color: white;">Mobile View</div>
+                            <div style="text-align: center; color: rgba(255, 255, 255, 0.9); padding: 0 1rem;">
+                                Hamburger menu visible. Drawer navigation with smooth slide-in animation.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="device" style="transform: scale(1.1);">
+                    <div class="device-screen">
+                        <div class="device-navbar">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; flex: 1;">
+                                <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #2563eb, #7c3aed); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">N</div>
+                                <span style="font-weight: 600; font-size: 0.9375rem;">NativeNav</span>
+                                <div style="display: flex; margin-left: 1rem; gap: 0.5rem;">
+                                    <a href="#" style="padding: 0.5rem 0.75rem; font-size: 0.875rem; color: #475569; text-decoration: none; border-radius: var(--radius-sm);">Home</a>
+                                    <a href="#" style="padding: 0.5rem 0.75rem; font-size: 0.875rem; color: #2563eb; text-decoration: none; border-radius: var(--radius-sm); background: rgba(37, 99, 235, 0.1);">Features</a>
+                                    <a href="#" style="padding: 0.5rem 0.75rem; font-size: 0.875rem; color: #475569; text-decoration: none; border-radius: var(--radius-sm);">Pricing</a>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button style="padding: 0.5rem 1rem; border: 1px solid #cbd5e1; border-radius: var(--radius-md); background: transparent; color: #475569; font-size: 0.875rem;">Sign In</button>
+                                <button style="padding: 0.5rem 1rem; border: none; border-radius: var(--radius-md); background: linear-gradient(135deg, #2563eb, #7c3aed); color: white; font-size: 0.875rem;">Get Started</button>
+                            </div>
+                        </div>
+                        <div style="padding: 1rem; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 1rem;">
+                            <div style="font-size: 1.25rem; font-weight: 600; color: white;">Desktop View</div>
+                            <div style="text-align: center; color: rgba(255, 255, 255, 0.9); padding: 0 1rem;">
+                                Full navigation visible. Hamburger hidden. Desktop-optimized layout with larger touch targets.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem; padding: 2rem; background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(124, 58, 237, 0.1)); border-radius: var(--radius-lg);">
+                <h2>Try It Out!</h2>
+                <p style="margin-bottom: 1.5rem;">Resize your browser window to see the adaptive layout in action. On mobile, tap the hamburger menu. On desktop, hover over navigation items.</p>
+                
+                <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+                    <button class="desktop-button primary" onclick="alert('Get Started clicked!')">
+                        <i class="fas fa-rocket"></i>
+                        Get Started
+                    </button>
+                    <button class="desktop-button secondary" onclick="alert('Learn More clicked!')">
+                        <i class="fas fa-book"></i>
+                        Learn More
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // DOM Elements
+        const navbar = document.getElementById('navbar');
+        const hamburger = document.getElementById('hamburger');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+        const mobileDrawer = document.getElementById('mobileDrawer');
+        const drawerClose = document.getElementById('drawerClose');
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+        const desktopNavLinks = document.querySelectorAll('.nav-link');
+
+        // State
+        let isDrawerOpen = false;
+        let lastScrollTop = 0;
+
+        // Toggle Mobile Drawer
+        function toggleDrawer() {
+            isDrawerOpen = !isDrawerOpen;
+            
+            if (isDrawerOpen) {
+                hamburger.classList.add('active');
+                mobileOverlay.classList.add('active');
+                mobileDrawer.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            } else {
+                closeDrawer();
+            }
+        }
+
+        // Close Mobile Drawer
+        function closeDrawer() {
+            isDrawerOpen = false;
+            hamburger.classList.remove('active');
+            mobileOverlay.classList.remove('active');
+            mobileDrawer.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Handle Scroll Events
+        function handleScroll() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            // Add scrolled class when page is scrolled
+            if (scrollTop > 20) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+            
+            // Hide navbar on scroll down, show on scroll up (mobile only)
+            if (window.innerWidth < 768) {
+                if (scrollTop > lastScrollTop && scrollTop > 100) {
+                    // Scrolling down
+                    navbar.style.transform = 'translateY(-100%)';
+                } else {
+                    // Scrolling up
+                    navbar.style.transform = 'translateY(0)';
+                }
+            }
+            
+            lastScrollTop = scrollTop;
+        }
+
+        // Set Active Navigation Link
+        function setActiveLink(link) {
+            // Update mobile links
+            mobileNavLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+            
+            // Update desktop links if they exist
+            const href = link.getAttribute('href');
+            desktopNavLinks.forEach(l => {
+                if (l.getAttribute('href') === href) {
+                    l.classList.add('active');
+                } else {
+                    l.classList.remove('active');
+                }
+            });
+        }
+
+        // Handle Navigation Link Click
+        function handleNavLinkClick(e) {
+            e.preventDefault();
+            const link = e.currentTarget;
+            
+            // Set active link
+            setActiveLink(link);
+            
+            // Close drawer if on mobile
+            if (window.innerWidth < 768) {
+                closeDrawer();
+            }
+            
+            // Scroll to section (demo)
+            const targetId = link.getAttribute('href');
+            if (targetId && targetId !== '#') {
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        }
+
+        // Handle Desktop Button Clicks
+        function handleDesktopButtonClick(type) {
+            alert(`${type} button clicked!`);
+            if (window.innerWidth < 768) {
+                closeDrawer();
+            }
+        }
+
+        // Initialize Event Listeners
+        function initializeEventListeners() {
+            // Hamburger menu click
+            hamburger.addEventListener('click', toggleDrawer);
+            
+            // Close drawer on overlay click
+            mobileOverlay.addEventListener('click', closeDrawer);
+            
+            // Close drawer on close button click
+            drawerClose.addEventListener('click', closeDrawer);
+            
+            // Navigation link clicks
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', handleNavLinkClick);
+            });
+            
+            desktopNavLinks.forEach(link => {
+                link.addEventListener('click', handleNavLinkClick);
+            });
+            
+            // Desktop button clicks
+            document.querySelectorAll('.desktop-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const text = this.textContent.trim();
+                    handleDesktopButtonClick(text);
+                });
+            });
+            
+            // Drawer button clicks
+            document.querySelectorAll('.drawer-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const text = this.textContent.trim();
+                    handleDesktopButtonClick(text);
+                });
+            });
+            
+            // Window scroll
+            window.addEventListener('scroll', handleScroll);
+            
+            // Window resize - close drawer if resizing to desktop
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 768 && isDrawerOpen) {
+                    closeDrawer();
+                }
+            });
+            
+            // Keyboard support - close drawer on ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && isDrawerOpen) {
+                    closeDrawer();
+                }
+            });
+        }
+
+        // Initialize on DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeEventListeners();
+            handleScroll(); // Initialize scroll state
+            
+            // Add a subtle animation to the logo on page load
+            setTimeout(() => {
+                const logoIcon = document.querySelector('.logo-icon');
+                logoIcon.style.transform = 'rotate(15deg)';
+                setTimeout(() => {
+                    logoIcon.style.transform = 'rotate(0)';
+                }, 300);
+            }, 500);
+        });
+
+        // Touch gesture support for drawer swipe
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        mobileDrawer.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        mobileDrawer.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, { passive: true });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const swipeDistance = touchEndX - touchStartX;
+            
+            // Swipe right to close (if drawer is open)
+            if (swipeDistance > swipeThreshold && isDrawerOpen) {
+                closeDrawer();
+            }
+        }
+    </script>
+</body>
+</html>

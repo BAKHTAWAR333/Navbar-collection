@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velocity | Modern Startup Navbar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --gray-light: #e9ecef;
+            --success: #06d6a0;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --border-radius: 12px;
+            --container-width: 1200px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: linear-gradient(135deg, #f5f7fa 0%, #f8f9fa 100%);
+            min-height: 200vh; /* For scrolling demo */
+            scroll-behavior: smooth;
+        }
+
+        /* Sticky Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            padding: 0.75rem 0;
+        }
+
+        .navbar.scrolled {
+            padding: 0.5rem 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Logo */
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 1.75rem;
+            color: var(--dark);
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: translateY(-2px);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 1.25rem;
+            transition: var(--transition);
+        }
+
+        .logo:hover .logo-icon {
+            transform: rotate(10deg);
+        }
+
+        /* Navigation Links */
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Primary CTA Button */
+        .cta-button {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 0.875rem 1.75rem;
+            font-weight: 700;
+            font-size: 0.95rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:active {
+            transform: translateY(-1px);
+        }
+
+        .cta-button i {
+            font-size: 1.1rem;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--dark);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .mobile-toggle:hover {
+            background: var(--gray-light);
+        }
+
+        /* Hero Section (for demo) */
+        .hero {
+            padding-top: 160px;
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+        }
+
+        .demo-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .demo-card {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .demo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .demo-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            max-width: 320px;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            z-index: 1001;
+            transition: var(--transition);
+            overflow-y: auto;
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .mobile-menu-links {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .mobile-menu-link {
+            display: block;
+            padding: 1rem 0;
+            font-weight: 600;
+            color: var(--dark);
+            text-decoration: none;
+            border-bottom: 1px solid var(--gray-light);
+            transition: var(--transition);
+        }
+
+        .mobile-menu-link:hover {
+            color: var(--primary);
+            padding-left: 0.5rem;
+        }
+
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 2.75rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-toggle {
+                display: block;
+            }
+            
+            .hero {
+                padding-top: 140px;
+            }
+            
+            .hero h1 {
+                font-size: 2.25rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar-container {
+                padding: 0 1rem;
+            }
+            
+            .logo {
+                font-size: 1.5rem;
+            }
+            
+            .logo-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 1.1rem;
+            }
+            
+            .cta-button {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.9rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+
+        /* Active Link Indicator */
+        .nav-link.active {
+            color: var(--primary);
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* Counter Animation (Demo) */
+        .counter {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(67, 97, 238, 0.1);
+            border-radius: 50px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-left: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        /* Notification Dot */
+        .notification-dot {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sticky Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <!-- Logo -->
+            <a href="#" class="logo">
+                <div class="logo-icon">V</div>
+                <span>Velocity</span>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <ul class="nav-links">
+                <li><a href="#product" class="nav-link active">Product</a></li>
+                <li><a href="#solutions" class="nav-link">Solutions</a></li>
+                <li><a href="#pricing" class="nav-link">Pricing</a></li>
+                <li><a href="#resources" class="nav-link">Resources <span class="counter">New</span></a></li>
+                <li><a href="#customers" class="nav-link">Customers</a></li>
+            </ul>
+
+            <!-- CTA & Mobile Toggle -->
+            <div style="display: flex; align-items: center; gap: 1.5rem;">
+                <button class="cta-button" id="ctaButton">
+                    <i class="fas fa-rocket"></i>
+                    Get Started Free
+                    <span class="notification-dot"></span>
+                </button>
+                <button class="mobile-toggle" id="mobileToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <a href="#" class="logo">
+                <div class="logo-icon">V</div>
+                <span>Velocity</span>
+            </a>
+            <button class="mobile-toggle" id="closeMenu">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="mobile-menu-links">
+            <li><a href="#product" class="mobile-menu-link">Product</a></li>
+            <li><a href="#solutions" class="mobile-menu-link">Solutions</a></li>
+            <li><a href="#pricing" class="mobile-menu-link">Pricing</a></li>
+            <li><a href="#resources" class="mobile-menu-link">Resources <span class="counter">New</span></a></li>
+            <li><a href="#customers" class="mobile-menu-link">Customers</a></li>
+        </ul>
+        <button class="cta-button" style="width: 100%; justify-content: center;">
+            <i class="fas fa-rocket"></i>
+            Get Started Free
+        </button>
+    </div>
+
+    <!-- Hero Section (Demo Content) -->
+    <main>
+        <section class="hero">
+            <h1>Accelerate Your Startup Growth</h1>
+            <p>Velocity is the all-in-one platform that helps startups scale faster with AI-powered insights, automated workflows, and data-driven decision making.</p>
+            
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3rem;">
+                <button class="cta-button">
+                    <i class="fas fa-play-circle"></i>
+                    Watch Demo
+                </button>
+                <button style="background: white; color: var(--primary); border: 2px solid var(--gray-light);" 
+                        class="cta-button">
+                    <i class="fas fa-book"></i>
+                    Read Docs
+                </button>
+            </div>
+
+            <div class="demo-sections">
+                <div class="demo-card" id="product">
+                    <h3>Product</h3>
+                    <p>Explore our powerful suite of tools designed to streamline your startup operations.</p>
+                </div>
+                <div class="demo-card" id="solutions">
+                    <h3>Solutions</h3>
+                    <p>Tailored solutions for different industries and business models.</p>
+                </div>
+                <div class="demo-card" id="pricing">
+                    <h3>Pricing</h3>
+                    <p>Transparent pricing that scales with your business.</p>
+                </div>
+            </div>
+            
+            <div style="margin-top: 4rem; padding: 3rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: var(--border-radius); color: white;">
+                <h2 style="color: white; margin-bottom: 1rem;">Ready to Accelerate?</h2>
+                <p style="color: rgba(255,255,255,0.9); margin-bottom: 2rem;">Join 5,000+ startups already using Velocity</p>
+                <button class="cta-button" style="background: white; color: var(--primary);">
+                    <i class="fas fa-chart-line"></i>
+                    Start Free Trial
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // DOM Elements
+        const navbar = document.getElementById('navbar');
+        const mobileToggle = document.getElementById('mobileToggle');
+        const closeMenu = document.getElementById('closeMenu');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const ctaButton = document.getElementById('ctaButton');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const mobileMenuLinks = document.querySelectorAll('.mobile-menu-link');
+
+        // Sticky Navbar on Scroll
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            // Add scrolled class when page is scrolled
+            if (scrollTop > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+            
+            // Optional: Hide navbar on scroll down, show on scroll up
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                // Scrolling down
+                navbar.style.transform = 'translateY(-100%)';
+            } else {
+                // Scrolling up
+                navbar.style.transform = 'translateY(0)';
+            }
+            
+            lastScrollTop = scrollTop;
+            
+            // Update active nav link based on scroll position
+            updateActiveNavLink();
+        });
+
+        // Mobile Menu Toggle
+        mobileToggle.addEventListener('click', () => {
+            mobileMenu.classList.add('active');
+            menuOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        closeMenu.addEventListener('click', () => {
+            closeMobileMenu();
+        });
+
+        menuOverlay.addEventListener('click', () => {
+            closeMobileMenu();
+        });
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('active');
+            menuOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // CTA Button Interaction
+        ctaButton.addEventListener('click', () => {
+            // Animation effect
+            ctaButton.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                ctaButton.style.transform = 'translateY(-3px)';
+            }, 150);
+            
+            // Show success message (in a real app, this would submit a form)
+            setTimeout(() => {
+                alert('🎉 Welcome to Velocity! Redirecting to signup...');
+                // In a real app: window.location.href = '/signup';
+            }, 300);
+        });
+
+        // Smooth Scroll for Navigation Links
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Update active link
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth Scroll for Mobile Menu Links
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu
+                    closeMobileMenu();
+                    
+                    // Update active link
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    document.querySelector(`.nav-link[href="${targetId}"]`).classList.add('active');
+                }
+            });
+        });
+
+        // Update Active Nav Link Based on Scroll Position
+        function updateActiveNavLink() {
+            const sections = document.querySelectorAll('.demo-card');
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 150;
+                const sectionHeight = section.clientHeight;
+                if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                    currentSection = '#' + section.getAttribute('id');
+                }
+            });
+            
+            if (currentSection) {
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === currentSection) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        }
+
+        // Add hover effect to logo
+        const logo = document.querySelector('.logo');
+        logo.addEventListener('mouseenter', () => {
+            logo.style.transform = 'translateY(-2px)';
+        });
+        
+        logo.addEventListener('mouseleave', () => {
+            logo.style.transform = 'translateY(0)';
+        });
+
+        // Initialize active link on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateActiveNavLink();
+            
+            // Add a subtle animation to the CTA button on page load
+            setTimeout(() => {
+                ctaButton.style.animation = 'none';
+                setTimeout(() => {
+                    ctaButton.style.animation = 'pulse 2s infinite';
+                }, 10);
+            }, 1000);
+        });
+
+        // Micro-interaction for CTA button on page scroll into view
+        const observerOptions = {
+            threshold: 0.5
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    ctaButton.classList.add('animated');
+                }
+            });
+        }, observerOptions);
+
+        // Observe hero section
+        const heroSection = document.querySelector('.hero');
+        if (heroSection) {
+            observer.observe(heroSection);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Navigation Bar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --secondary-color: #2d5aa0;
+            --accent-color: #3182ce;
+            --text-primary: #2d3748;
+            --text-secondary: #4a5568;
+            --surface-light: #ffffff;
+            --surface-neutral: #f7fafc;
+            --border-color: #e2e8f0;
+            --focus-ring: rgba(49, 130, 206, 0.4);
+            --transition-base: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+            --border-radius: 0.375rem;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.5;
+            color: var(--text-primary);
+            background-color: var(--surface-neutral);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* Navigation Bar */
+        .nav-container {
+            background-color: var(--surface-light);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .nav-wrapper {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-lg);
+        }
+        
+        .nav-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+        
+        /* Logo/Brand */
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            text-decoration: none;
+            color: var(--primary-color);
+        }
+        
+        .brand-logo {
+            font-weight: 700;
+            font-size: var(--font-size-lg);
+            letter-spacing: -0.025em;
+        }
+        
+        .brand-divider {
+            width: 1px;
+            height: 24px;
+            background-color: var(--border-color);
+        }
+        
+        .brand-tagline {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+        
+        /* Main Navigation */
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            list-style: none;
+        }
+        
+        .nav-item {
+            position: relative;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-sm) var(--spacing-md);
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: var(--font-size-base);
+            font-weight: 500;
+            border-radius: var(--border-radius);
+            transition: background-color var(--transition-base);
+            white-space: nowrap;
+        }
+        
+        .nav-link:hover {
+            background-color: var(--surface-neutral);
+        }
+        
+        .nav-link:focus {
+            outline: 2px solid var(--focus-ring);
+            outline-offset: 2px;
+        }
+        
+        .nav-link.active {
+            color: var(--accent-color);
+            background-color: rgba(49, 130, 206, 0.08);
+        }
+        
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -16px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--accent-color);
+        }
+        
+        /* Right side actions */
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+        
+        .search-container {
+            position: relative;
+        }
+        
+        .search-input {
+            padding: var(--spacing-sm) var(--spacing-md) var(--spacing-sm) 2.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: var(--font-size-sm);
+            width: 180px;
+            transition: border-color var(--transition-base), width var(--transition-base);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            width: 220px;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: var(--spacing-md);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            pointer-events: none;
+        }
+        
+        .user-menu {
+            position: relative;
+        }
+        
+        .user-button {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: none;
+            border: 1px solid transparent;
+            border-radius: var(--border-radius);
+            font-size: var(--font-size-sm);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: background-color var(--transition-base), border-color var(--transition-base);
+        }
+        
+        .user-button:hover {
+            background-color: var(--surface-neutral);
+        }
+        
+        .user-button:focus {
+            outline: 2px solid var(--focus-ring);
+            outline-offset: 2px;
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        /* Mobile menu toggle */
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: var(--spacing-sm);
+            border-radius: var(--border-radius);
+        }
+        
+        .mobile-toggle:focus {
+            outline: 2px solid var(--focus-ring);
+            outline-offset: 2px;
+        }
+        
+        /* Content area for demonstration */
+        .content {
+            max-width: 1280px;
+            margin: var(--spacing-xl) auto;
+            padding: 0 var(--spacing-lg);
+            flex: 1;
+        }
+        
+        .content h1 {
+            margin-bottom: var(--spacing-lg);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .content p {
+            margin-bottom: var(--spacing-md);
+            color: var(--text-secondary);
+            max-width: 65ch;
+        }
+        
+        /* Demo controls */
+        .demo-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-xl);
+            padding: var(--spacing-lg);
+            background-color: var(--surface-light);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+        
+        .control-label {
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        
+        .control-buttons {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+        
+        .control-button {
+            padding: var(--spacing-sm) var(--spacing-md);
+            background-color: var(--surface-neutral);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: var(--font-size-sm);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: background-color var(--transition-base);
+        }
+        
+        .control-button:hover {
+            background-color: #e2e8f0;
+        }
+        
+        .control-button.active {
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 1024px) {
+            .search-input {
+                width: 150px;
+            }
+            
+            .search-input:focus {
+                width: 180px;
+            }
+            
+            .brand-tagline {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-toggle {
+                display: block;
+            }
+            
+            .nav-menu, .search-container {
+                display: none;
+            }
+            
+            .nav-bar {
+                height: 60px;
+            }
+            
+            .nav-menu.mobile-open {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background-color: var(--surface-light);
+                border-top: 1px solid var(--border-color);
+                box-shadow: var(--shadow-md);
+                padding: var(--spacing-md) var(--spacing-lg);
+                gap: var(--spacing-xs);
+            }
+            
+            .nav-menu.mobile-open .nav-link {
+                padding: var(--spacing-md);
+                justify-content: space-between;
+                border-radius: var(--border-radius);
+            }
+            
+            .nav-menu.mobile-open .nav-link.active::after {
+                display: none;
+            }
+            
+            .nav-menu.mobile-open .nav-link.active {
+                background-color: rgba(49, 130, 206, 0.12);
+            }
+            
+            .search-container.mobile-open {
+                display: block;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                right: 0;
+                padding: var(--spacing-md) var(--spacing-lg);
+                background-color: var(--surface-light);
+                border-top: 1px solid var(--border-color);
+                box-shadow: var(--shadow-md);
+            }
+            
+            .search-container.mobile-open .search-input {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .brand-logo {
+                font-size: var(--font-size-base);
+            }
+            
+            .user-name {
+                display: none;
+            }
+            
+            .nav-wrapper {
+                padding: 0 var(--spacing-md);
+            }
+        }
+        
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            :root {
+                --border-color: #000000;
+                --text-primary: #000000;
+                --text-secondary: #000000;
+            }
+            
+            .nav-container {
+                border-bottom-width: 2px;
+            }
+            
+            .nav-link.active::after {
+                height: 3px;
+            }
+        }
+        
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            :root {
+                --transition-base: 0ms;
+            }
+            
+            .search-input:focus {
+                transition: none;
+            }
+        }
+        
+        /* Focus visible polyfill support */
+        .nav-link:focus-visible,
+        .user-button:focus-visible,
+        .mobile-toggle:focus-visible,
+        .search-input:focus-visible,
+        .control-button:focus-visible {
+            outline: 2px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+        
+        .nav-link:focus:not(:focus-visible),
+        .user-button:focus:not(:focus-visible),
+        .mobile-toggle:focus:not(:focus-visible),
+        .search-input:focus:not(:focus-visible),
+        .control-button:focus:not(:focus-visible) {
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-container">
+        <div class="nav-wrapper">
+            <nav class="nav-bar" aria-label="Main navigation">
+                <a href="#" class="brand">
+                    <span class="brand-logo">ENTERPRISE</span>
+                    <span class="brand-divider" aria-hidden="true"></span>
+                    <span class="brand-tagline">Design System</span>
+                </a>
+                
+                <button class="mobile-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <ul class="nav-menu" id="nav-menu" role="menubar">
+                    <li class="nav-item" role="none">
+                        <a href="#" class="nav-link active" role="menuitem" aria-current="page">
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" role="none">
+                        <a href="#" class="nav-link" role="menuitem">
+                            <span>Projects</span>
+                            <span class="pill">3</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" role="none">
+                        <a href="#" class="nav-link" role="menuitem">
+                            <span>Analytics</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" role="none">
+                        <a href="#" class="nav-link" role="menuitem">
+                            <span>Team</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" role="none">
+                        <a href="#" class="nav-link" role="menuitem">
+                            <span>Settings</span>
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="nav-actions">
+                    <div class="search-container">
+                        <i class="fas fa-search search-icon" aria-hidden="true"></i>
+                        <input 
+                            type="search" 
+                            class="search-input" 
+                            placeholder="Search..." 
+                            aria-label="Search"
+                        >
+                    </div>
+                    
+                    <div class="user-menu">
+                        <button class="user-button" aria-label="User menu" aria-expanded="false" aria-haspopup="true">
+                            <div class="user-avatar">JD</div>
+                            <span class="user-name">Jordan Doe</span>
+                            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    
+    <main class="content">
+        <h1>Enterprise Navigation System</h1>
+        <p>This navigation bar demonstrates principles of deliberate design with clear hierarchy, intentional use of space, and minimal visual noise. It has been crafted for enterprise review with accessibility and responsiveness as first-class considerations.</p>
+        <p>The design avoids generic patterns, unnecessary motion, and visual clutter. Each element serves a purpose, and spacing is used intentionally to create balance and composition.</p>
+        
+        <div class="demo-controls">
+            <div class="control-group">
+                <div class="control-label">Active State</div>
+                <div class="control-buttons">
+                    <button class="control-button" data-nav-item="dashboard">Dashboard</button>
+                    <button class="control-button" data-nav-item="projects">Projects</button>
+                    <button class="control-button" data-nav-item="analytics">Analytics</button>
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <div class="control-label">View Mode</div>
+                <div class="control-buttons">
+                    <button class="control-button active" data-view="desktop">Desktop</button>
+                    <button class="control-button" data-view="tablet">Tablet</button>
+                    <button class="control-button" data-view="mobile">Mobile</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Mobile menu toggle
+        const mobileToggle = document.querySelector('.mobile-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+        const searchContainer = document.querySelector('.search-container');
+        
+        mobileToggle.addEventListener('click', () => {
+            const isExpanded = mobileToggle.getAttribute('aria-expanded') === 'true';
+            mobileToggle.setAttribute('aria-expanded', !isExpanded);
+            
+            if (!isExpanded) {
+                navMenu.classList.add('mobile-open');
+                searchContainer.classList.remove('mobile-open');
+            } else {
+                navMenu.classList.remove('mobile-open');
+            }
+        });
+        
+        // Search focus for mobile
+        const searchInput = document.querySelector('.search-input');
+        searchInput.addEventListener('focus', () => {
+            if (window.innerWidth <= 768) {
+                navMenu.classList.remove('mobile-open');
+                searchContainer.classList.add('mobile-open');
+            }
+        });
+        
+        // Close mobile menus when clicking outside
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+                if (!e.target.closest('.nav-bar') && !e.target.closest('.search-container')) {
+                    navMenu.classList.remove('mobile-open');
+                    searchContainer.classList.remove('mobile-open');
+                    mobileToggle.setAttribute('aria-expanded', 'false');
+                }
+            }
+        });
+        
+        // Demo controls
+        const navLinks = document.querySelectorAll('.nav-link');
+        const controlButtons = document.querySelectorAll('.control-button[data-nav-item]');
+        const viewButtons = document.querySelectorAll('.control-button[data-view]');
+        
+        // Active state controls
+        controlButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const navItem = button.dataset.navItem;
+                
+                // Update active button
+                controlButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Update active nav link
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    const linkText = link.querySelector('span').textContent.toLowerCase();
+                    if (linkText === navItem) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
+        
+        // View mode controls
+        viewButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const view = button.dataset.view;
+                
+                // Update active button
+                viewButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Simulate viewport change
+                const container = document.querySelector('.nav-wrapper');
+                const body = document.body;
+                
+                // Reset styles
+                container.style.maxWidth = '';
+                container.style.padding = '';
+                body.style.zoom = '';
+                
+                switch(view) {
+                    case 'tablet':
+                        container.style.maxWidth = '768px';
+                        break;
+                    case 'mobile':
+                        container.style.maxWidth = '375px';
+                        container.style.padding = '0 16px';
+                        body.style.zoom = '0.9';
+                        break;
+                }
+            });
+        });
+        
+        // Keyboard navigation for menu
+        const menuItems = document.querySelectorAll('.nav-link');
+        let currentFocus = 0;
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab' && navMenu.classList.contains('mobile-open')) {
+                e.preventDefault();
+                
+                if (e.shiftKey) {
+                    currentFocus--;
+                    if (currentFocus < 0) {
+                        currentFocus = menuItems.length - 1;
+                    }
+                } else {
+                    currentFocus++;
+                    if (currentFocus >= menuItems.length) {
+                        currentFocus = 0;
+                    }
+                }
+                
+                menuItems[currentFocus].focus();
+            }
+        });
+        
+        // User menu toggle
+        const userButton = document.querySelector('.user-button');
+        userButton.addEventListener('click', () => {
+            const isExpanded = userButton.getAttribute('aria-expanded') === 'true';
+            userButton.setAttribute('aria-expanded', !isExpanded);
+            // In a real implementation, this would open a dropdown menu
+            alert('User menu would open here. In a real implementation, this would contain user options and logout.');
+        });
+    </script>
+</body>
+</html>
